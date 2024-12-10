@@ -31,7 +31,21 @@ var swordInterval = null;
 var swordBroken = false;
 var canBreathe = false;
 var difficulty = 20;
-
+var lastSpoken = (+Date.now());
+var swordIsPaimon = false;
+var paimonHurts = [
+	"Paimon hurts!",
+	"Paimon is NOT emergency food!",
+	"Ow!",
+	"Stop it!",
+	"Hey!",
+	"Watch it!",
+	"Paimon will get you for that!",
+	"Paimon hates mean people!",
+	"That's not nice!",
+	"Let Paimon hurt you already!",
+	"Paimon think everyone should rethink violence..."
+];
 function spawnBirdSwarm(number) {
 	for(var i = 0; i < number; i++) {
 		var newBird = lib.misc.createImage("bird.png", `width:3%;transition:0.1s;`);
@@ -85,15 +99,15 @@ var main = (async function() {
 			// lib.audio.playMovingSound(400+((Math.random()*200)-100), 300+((Math.random()*200)-100), 0.1, "sine");
 		}
 
-		if (event.code == "KeyW") {
-			if(scene != "hell") {
+		if (event.code == "KeyW" || event.code == "ArrowUp") {
+			if(scene != "hell" || event.code == "ArrowUp") {
 				position.y--;
 				footstep();
 			} else {
 				lib.audio.playSound(500, 100, "sine");
 			}
-		} else if (event.code == "KeyS") {
-			if(scene != "hell") {
+		} else if (event.code == "KeyS" || event.code == "ArrowDown") {
+			if(scene != "hell" || event.code == "ArrowDown") {
 				position.y++;
 				footstep();
 			} else {
@@ -121,7 +135,9 @@ var main = (async function() {
 					lib.css.SetPosition(jose, "50%", "50%");
 					temple.remove();
 					lib.css.setBackground("pain_floor.png");
-					console.warn(birds);
+					createTimedDialog("Paimon", "I hear birds!", 3000);
+					lastSpoken = (+Date.now());
+					swordIsPaimon = true;
 					
 					var companion = lib.misc.createImage("companion.png", `width: 7%;transform:translate(-50%,-50%);transition:1s;`);
 					lib.css.SetPosition(companion, "50%", "50%");
@@ -252,7 +268,10 @@ var main = (async function() {
 						var welcome = document.createElement("h1");
 						welcome.style.color = "red";
 						welcome.style.backgroundColor = "black";
-						welcome.innerText = "WELCOME TO HELL. Have a good day! (You now have the flute of dispair!)";
+						welcome.innerText = "WELCOME TO [THE UNDERWORLD]. Have a good day!";
+						
+						createTimedDialog("Satan", "You now have a flute of dispair! Press SPACE to use.", 6000);
+						
 						document.body.appendChild(welcome);
 						scheduler.timeout(function() {
 							welcome.remove();
@@ -351,6 +370,12 @@ var main = (async function() {
 					scheduler.timeout(function() {
 						spawnBirdSwarm(1);
 					}, 5000);
+					
+					if((((+Date.now()) - lastSpoken) > 5000) && swordIsPaimon) {
+						lastSpoken = (+Date.now());
+						var sentence = paimonHurts[Math.round(Math.random() * (paimonHurts.length - 1))];
+						createTimedDialog("Paimon", sentence, 3000);
+					}
 				}
 				
 				// console.warn(bird);

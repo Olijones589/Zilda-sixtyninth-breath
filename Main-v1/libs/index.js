@@ -56,11 +56,11 @@ function spawnBirdSwarm(number) {
 	}
 }
 
-var main = (async function() {
-	const jose_transition = "0.1s";
-	lib.css.setBackground("desert.jpg");
 
-	const jose = lib.misc.createImage("jose.png", `
+const jose_transition = "0.1s";
+lib.css.setBackground("desert.jpg");
+
+const jose = lib.misc.createImage("jose.png", `
 	transition: ${jose_transition};
 	transform: translate(-50%, -50%);
 	max-width: 7%;
@@ -70,7 +70,7 @@ var main = (async function() {
 	z-index: 5;
 `);
 
-	const temple = lib.misc.createImage("temple.png", `
+const temple = lib.misc.createImage("temple.png", `
 	transform: translate(-50%, -50%);
 	max-width: 20%;
 	position: absolute;
@@ -78,6 +78,7 @@ var main = (async function() {
 	left: 50%;
 `);
 
+var main = (async function() {
 	document.body.appendChild(jose);
 	document.body.appendChild(temple);
 
@@ -196,6 +197,7 @@ var main = (async function() {
 	async function update() {
 		scheduler.handle();
 		if (scene == "main") {
+			assureSungIs(oranina_of_crims);
 			if (lib.way.checkObjectsTouch(jose, temple)) {
 				console.log("erect and drect touching!!!");
 				scene = "temple";
@@ -271,6 +273,7 @@ var main = (async function() {
 						welcome.innerText = "WELCOME TO [THE UNDERWORLD]. Have a good day!";
 						
 						createTimedDialog("Satan", "You now have a flute of dispair! Press SPACE to use.", 6000);
+						weird += 10;
 						
 						document.body.appendChild(welcome);
 						scheduler.timeout(function() {
@@ -285,8 +288,8 @@ var main = (async function() {
 							}, 2 * 1000);
 						}, 2000);
 					}
-				}, 15 * 1000);
-				// }, 15);
+				// }, 15 * 1000);
+				}, 15);
 
 				scheduler.timeout(function() {
 					song = action;
@@ -375,7 +378,21 @@ var main = (async function() {
 						lastSpoken = (+Date.now());
 						var sentence = paimonHurts[Math.round(Math.random() * (paimonHurts.length - 1))];
 						createTimedDialog("Paimon", sentence, 3000);
-					}
+					} 
+					
+					console.log("child123");
+					if(swordIsPaimon) {
+						console.log("childbeaner");
+						jose.style.width = `calc(${jose.style.width} + 4%)`;
+						jose.style.maxWidth = `calc(${jose.style.width} + 4%)`;
+						jose.style.height = `calc(${jose.style.width} + 4%)`;
+						jose.style.maxHeight = `calc(${jose.style.width} + 4%)`;
+						
+						if((Math.random() * 10) == 5) {
+							createTimedDialog("Paimon", "Huh?! Paimon didn't know Jose was so big!", 3000);
+						}
+					}	
+					console.log("child1234");
 				}
 				
 				// console.warn(bird);

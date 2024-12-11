@@ -84,6 +84,6 @@ if (SCHEDULE) {
 	}
 	
 	scheduler.handle = function() {
-		console.warn("Schedule handler diabled.");
+		// console.warn("Schedule handler diabled.");
 	};
 }

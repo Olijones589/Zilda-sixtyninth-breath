@@ -23,7 +23,7 @@ function loadNextScript() {
 			} else {
 				p.remove();
 			}
-		}, 100 + (Math.random() * 400)) // sorry my server is really slow
+		}, 0); // sorry my server is really slow
 	}
 	
 	script.onerror = function(e) {

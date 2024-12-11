@@ -105,7 +105,7 @@ function parse(sung) {
 			instructions.push({
 				"type": "play",
 				"notes": elem.split(""),
-				"time": 1
+				"time": speedSung
 			});
 		}
 	});
@@ -223,11 +223,31 @@ function robloxNoteConverter(rnote, o) {
 	return noteNameToHz(robloxNoteToRealNote(rnote), o);
 }
 
+var currentPlayingSungSource = null;
+var stopSong = false;
+
+function assureSungIs(song) {
+	song = song.replaceAll("\n", "");
+	if(currentPlayingSungSource != song && !stopSong) {
+		stopSong = true;
+		setTimeout(function() {
+			stopSong = false;
+			playSung(song);
+		}, ((sungSpeed * 2) + 1000));
+	}
+}
+
 var sungWaves = ["triangle", "sine", "square", "triangle", "sawtooth"];
 var sungSpeed = 200;
 var octaveShift = 1;
+var weird = 0;
+
+setInterval(function() {
+	weird++;
+}, 5000);
 
 async function playSung(sung, converter) {
+	currentPlayingSungSource = sung.replaceAll("\n", "");
 	const newAudioCtx = new(window.AudioContext || window.webkitAudioContext)();
 	if (converter == undefined) {
 		converter = robloxNoteConverter;
@@ -239,7 +259,16 @@ async function playSung(sung, converter) {
 	gainNode.connect(newAudioCtx.destination);
 
 	function playNext() {
+		if(stopSong) {
+			setTimeout(function() {
+				stopSong = false;
+			}, 1000);
+			currentPlayingSungSource = null;
+			return;
+		}
+		
 		if (typeof parsed[index] == "undefined") {
+			currentPlayingSungSource = null;
 			return;
 		} else if (parsed[index].type == "wait") {
 			setTimeout(playNext, parsed[index].time * (sungSpeed));
@@ -253,7 +282,7 @@ async function playSung(sung, converter) {
 			for(var i = 0; i < frequencies.length; i++) {
 				var o = newAudioCtx.createOscillator();
 				o.type = sungWaves[i % sungWaves.length];
-				o.frequency.value = frequencies[i];
+				o.frequency.value = (frequencies[i] + Math.round((Math.random()*weird)-(weird/2)));
 				o.connect(gainNode);
 				o.start(0);
 				oscs.push(o);
@@ -407,6 +436,6 @@ function preaction() {
 
 var song = tension;
 
-scheduler.interval(function() {
-	song();
-}, 1000);
+// scheduler.interval(function() {
+//	song();
+// }, 1000);

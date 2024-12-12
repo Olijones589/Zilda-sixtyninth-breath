@@ -1,4 +1,6 @@
 lib.way.ready();
+assureSungIs(christmas);
+stopSong = true;
 var playButton = lib.misc.createButton("Start System of Challenges", function() {
 	main();
 	playButton.remove();

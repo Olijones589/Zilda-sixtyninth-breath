@@ -1,14 +1,5 @@
 var speedSung = 0.5;
 
-var you_won = `[st] o u o [sf] o [uh] o [ya] o i [so]d[st] o u o
-[tj] p i p [ht] o [ul] o [hr] o [yg] [fo]g[tf] o u o
-[ip] asdfghjhgf[dtq]sap[ot0]
-pasdfghgfd[st0]apo[it9]
-opasdfgfds[ar9]poi[ut8]
-iopasdfdsa[p08]oiu[yeq]
-uiopaSdpaSdfgh[jq]klkjh[gw]f[ge]hjhgf[dQ]s[a5]7[h9]w[f5]8[s0]w[d5]7[h9]w[f5]8[s0]w[d5] | [hdaw] | [o5] |
-TyTyTyTytytytyty[rz]y[rk]y[rh]yryry[rj][yk][rj]y[rh]y[th]yr[yG][eG]yrytyrytyey[rz]y[rk]y[rh]yryry[rj][yk][rj]y[rh]y[th]yr[yG][eG]yrytyrytyeyzryoazkhftuosfhfletIpljGdryiadGdkwruokhfsetupsfsjQeyIjGdawryohda[put] [ut] [ut] [ut] [uts] [ut] [utf] [ut] [utj] [ut] [ut] [utk] [utl] [utj] [utl] [utj] [yk]a[oh]a[yz]aoayaoa[yl][ak][oj][ah][yj]sIsysIsysIsysIs[oah] hdhkzkhk[lspy]jGj[hoa] oyoadaoa[ste9]pIp[orw] | [kdw5] | [hdw5] | [ow5] hdhJzJhJ[lspy]jGj[hPo] oyoPdPoP[ste9]pIpoweEtyuIohJjhgfdSertyuIOpLxzLJjh[g92] dpdgjgdg[houe]fSf[diy] yeyipiyi[ow06]uTu[9q] yuiopaSdyiuytreWasdfGHjkWreWq098jxzlkjhgypoiuytrhzlkjhgftoiuytreglkjhgfdriuytreWfkjHgfdsetrewq09PdsPpoi[uEw8]iopPsdf[gi] s p s [ij] s [pl] s [of] s P [sg]h[ig] s p s [iz] d P d [il] s [cp] s [ul] s [oJ] [sj]J[ij] s p s [Pd] fghjJlzlJj[hiE]gfd[sie] dfghjJlJjh[gie]fds[Piw] sdfghjJjhg[fwu]dsP[piq] PsdfghjhgfdsPpjqweEtyuiuyt[Esj]ewq[0sh] qwertyuytr[esh]wq0[9sg] 0qwertytre[wag]q09[8sf] 90qwertrew[qsf]098[dqe]yuiopaSdpaSdfgh[jq]klkjh[gw]f[ge]hjhgf[dQ]s[5a]7[9h]w[5f]8[0s]w[5d]7[9h]w[5f]8[0s]w[5d] | [whda] | [5o] |`;
-
 var oranina_of_crims = `
 [qi] [tpe] [tea] [te] [qi] [tpe] [tea] [te]
 [qi] [tpe] [tea] [tfe] [qd] [te] [tea] [tse]
@@ -73,60 +64,6 @@ var i_of_tigger = `[6ups]|6|[ups] [yoa] [ups]
 [qetj]||[qet]|d sd
 [0et]|s||
 6`;
-
-var christmas = `s asp
-s asp
-s asp
-s asp
-[es] asp
-[ws] asp
-[qs] asp
-[0s] as[0p]
-[6s]0[ea][rs][tp]
-[5s]0[wa][es][rp]
-[4s]8[qa][ws][ep]
-[3s]6[0a][6s][3p]
-[6sf]0[ead][rsf][tps]
-[5sf]0[wad][esf][rps]
-[4sf]8[qad][wsf][eps]
-[3sf]6[0ad][6sf][3ps]
-[6epj] [6pj][6pj][6ph][6pg][5wof]
-[5of][5of][5od][5os][4qid]
-[4id][4id][4if][4id][30tp]
-[3rp][3tp][3ep]7[3up][%I][7o][0p][7a][5s][3d][5f][7d]0[7s]%[3up][%I][7o][0p][7a][5s][3d][5f][7d]0s
-[8pj] 786
-8 786
-8 786
-8 786
-[6f]0er[td]
-[6s]0er[tp]
-[5a]9[ws]e[ra]
-[6p]0ert
-[6f]0er[td]
-[6s]0er[tp]
-[5a]9[ws]e[ra]
-[6p]0ert8[5s]80w[0s]8[2d]579[7d]5[6f]80e[0f]8[4h]6[8g]q[8f]6[2d]6[9f]0[qd]7[8s]
-7%[3a]7[3p]%70Wru|
-[6s]0[ea][rs][tp]
-[5s]0[wa][es][rp]
-[4s]8[qa][ws][ep]
-[3s]6[0a][6s][3p]
-[6sf]0[ead][rsf][tps]
-[5sf]0[wad][esf][rps]
-[4sf]8[qad][wsf][eps]
-[3sf]6[0ad][6sf][3ps]
-[6epj] [6pj][6pj][6ph][6pg][5wof]
-[5of][5of][5od][5os][4qid]
-[4id][4id][4if][4id][30tp]
-[3rp][3tp][3ep]7[3up][%I][7o][0p][7a][5s][3d][5f][7d]0[7s]%[3up][%I][7o][0p][7a][5s][3d][5f][7d]0[7s]%
-[8pj] 786
-8 786
-8 786
-8 78[6e]
-[6t]869[6y]0[6u]86[9i][6u]0[5y]758[5r]9[5w]75[8e][5r]9
-[4t]647[4e]8[4e]64[7w][4e]8[3r]%36[3w]7[90] 8 [7e]
-[6t]869[6y]0[6u]86[9i][6u]0[5y]758[5r]9[5w]75[8e][5r]9
-[4t]64[7r][4e]8[3w]73[8q][3w]9[8e]|78[6e]`
 
 function parse(sung) {
 	sung = sung.replaceAll("\n", "");
@@ -290,6 +227,7 @@ var currentPlayingSungSource = null;
 var stopSong = false;
 
 function assureSungIs(song) {
+	song = song.replaceAll("\n", "");
 	if(currentPlayingSungSource != song && !stopSong) {
 		stopSong = true;
 		setTimeout(function() {
@@ -309,10 +247,7 @@ setInterval(function() {
 }, 5000);
 
 async function playSung(sung, converter) {
-	if(currentPlayingSungSource != null) {
-		return;
-	}
-
+	currentPlayingSungSource = sung.replaceAll("\n", "");
 	const newAudioCtx = new(window.AudioContext || window.webkitAudioContext)();
 	if (converter == undefined) {
 		converter = robloxNoteConverter;

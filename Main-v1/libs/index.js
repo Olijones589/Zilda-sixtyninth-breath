@@ -1,6 +1,5 @@
 lib.way.ready();
 
-speed = 500;
 assureSungIs(christmas);
 
 var playButton = lib.misc.createButton("Start System of Challenges", function() {

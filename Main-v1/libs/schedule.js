@@ -6,7 +6,7 @@
 
 
 // but if you want you can disable it.
-const SCHEDULE = false;
+const SCHEDULE = true;
 const SCHEDULER_PREHANDLE = 0;
 
 if (SCHEDULE) {
@@ -15,9 +15,21 @@ if (SCHEDULE) {
 
 	scheduler.scheduled = [];
 
+	scheduler._addToScheduler = function(info) {
+		var index = scheduler.scheduled.indexOf(null);
+
+		if(index != -1) {
+			scheduler.scheduled[index] = info;
+			return;
+		}
+
+		scheduler.scheduled.push(info);
+	}
+
 	scheduler.timeout = function(handler, time) {
 		id++;
-		scheduler.scheduled.push({
+			
+		scheduler._addToScheduler({
 			"handler": handler,
 			"targetTime": ((+Date.now()) + time),
 			"happened": false
@@ -27,7 +39,7 @@ if (SCHEDULE) {
 
 	scheduler.interval = function(handler, time) {
 		id++;
-		scheduler.scheduled.push({
+		scheduler._addToScheduler({
 			"handler": handler,
 			"happened": "interval",
 			"interval": time,
@@ -51,9 +63,11 @@ if (SCHEDULE) {
 	scheduler.handle = function() {
 		for (var i = 0; i < scheduler.scheduled.length; i++) {
 			var item = scheduler.scheduled[i];
+			if(item == null) { continue; }
 			if (((+Date.now() + SCHEDULER_PREHANDLE) >= item.targetTime) && ((!item.happened) || item.happened == "interval")) {
 				if (item.happened != "interval") {
 					item.happened = true;
+					scheduler.scheduled[i] = null;
 				} else {
 					item.targetTime = ((+Date.now()) + item.interval);
 				}

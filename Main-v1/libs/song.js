@@ -290,7 +290,6 @@ var currentPlayingSungSource = null;
 var stopSong = false;
 
 function assureSungIs(song) {
-	song = song.replaceAll("\n", "");
 	if(currentPlayingSungSource != song && !stopSong) {
 		stopSong = true;
 		setTimeout(function() {
@@ -310,7 +309,10 @@ setInterval(function() {
 }, 5000);
 
 async function playSung(sung, converter) {
-	currentPlayingSungSource = sung.replaceAll("\n", "");
+	if(currentPlayingSungSource != null) {
+		return;
+	}
+
 	const newAudioCtx = new(window.AudioContext || window.webkitAudioContext)();
 	if (converter == undefined) {
 		converter = robloxNoteConverter;

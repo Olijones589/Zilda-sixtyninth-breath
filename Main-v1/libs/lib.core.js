@@ -81,6 +81,21 @@ lib.misc.createButton = function(text, clickHandler) {
 
 // Based on the way lib.js does it!
 lib.way = {};
+
+lib.way.thisFrame = +(Date.now());
+lib.way.lastFrame = +(Date.now());
+lib.way.averageDeltaTime = lib.way.thisFrame - lib.way.lastFrame;
+lib.way.frame = function() {
+	lib.way.lastFrame = lib.way.thisFrame;
+	lib.way.thisFrame = +(Date.now());
+	lib.way.averageDeltaTime += lib.way.thisFrame - lib.way.lastFrame;
+	lib.way.averageDeltaTime /= 2;
+}
+
+lib.way.fps = function() {
+	return (1000 / lib.way.averageDeltaTime);
+}
+
 lib.way.ready = function() {
 	document.body.style.userSelect = "none";
 	document.body.style.imageRendering = "pixelated";

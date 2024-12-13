@@ -15,9 +15,42 @@ top: 50%;
 transform: translate(-50%, -50%);
 width: 20%;
 height: 40%;
+border-radius: 10px;
+background-color: black;
+color: white;
+border: white 1px solid;
+font-size: 50%;
+transition: 1s;
 `;
 
+playButton.addEventListener("mouseenter", function() {
+	playButton.style.fontSize = "100%";
+});
+
+playButton.onmousedown = function() { 
+	playButton.style.backgroundColor = "gray";
+}
+
+playButton.onmouseup = function() { 
+	playButton.style.backgroundColor = "black";
+}
+
+playButton.addEventListener("mouseleave", function() {
+	playButton.style.fontSize = "50%";
+});
+
 // Main game
+var fpsCounter = document.createElement("p");
+fpsCounter.innerText = "... fps";
+fpsCounter.style.left = "3%";
+fpsCounter.style.bottom = "-15px";
+fpsCounter.style.position = "absolute";
+fpsCounter.style.transform = "translate(-50%, -50%)";
+fpsCounter.style.backgroundColor = "white";
+fpsCounter.style.borderRadius = "10px";
+fpsCounter.style.padding = "5px";
+document.body.appendChild(fpsCounter);
+
 var scene = "main";
 var playingDeath = false;
 var sword = null;
@@ -36,6 +69,7 @@ var canBreathe = false;
 var difficulty = 20;
 var lastSpoken = (+Date.now());
 var swordIsPaimon = false;
+var gameDungeon = createDungeon(50); 
 var paimonHurts = [
 	"Paimon hurts!",
 	"Paimon is NOT emergency food!",
@@ -199,6 +233,10 @@ var main = (async function() {
 	var touchingTrain = false;
 	async function update() {
 		scheduler.handle();
+		lib.way.frame();
+
+		fpsCounter.innerText = `${Math.round(lib.way.fps())} fps`;
+		
 		if (scene == "main") {
 			assureSungIs(oranina_of_crims);
 			if (lib.way.checkObjectsTouch(jose, temple)) {
@@ -247,7 +285,7 @@ var main = (async function() {
 				height: 100%;
 				z-index: -1;
 				`);
-				lib.css.TransitionlessSetPosition(hellBackground, "${Math.random()*100}%", "0px");
+				lib.css.TransitionlessSetPosition(hellBackground, `${Math.random()*100}%`, "0px");
 				document.body.appendChild(hellBackground);
 			
 				scheduler.timeout(function() {
@@ -350,7 +388,8 @@ var main = (async function() {
 						x: (joseLocation.minX + joseLocation.maxX) / 2, 
 						y: (joseLocation.minY + joseLocation.maxY) / 2
 					});
-					lib.css.MovePosition(demon, `${path.x*0.3}%`, `${path.y*0.3}%`, true);
+					
+					lib.css.MovePosition(demon, `${(path.x*30)/lib.way.fps()}%`, `${(path.y*30)/lib.way.fps()}%`, true);
 				}
 
 				if(lib.way.checkObjectsTouch(jose, demon) && !playingDeath) {
@@ -410,7 +449,7 @@ var main = (async function() {
 					y: (joseLocation.minY + joseLocation.maxY) / 2
 				});
 				
-				lib.css.MovePosition(bird, `${(path.x+Math.random())*0.3}%`, `${path.y*0.1}%`, true);
+				lib.css.MovePosition(bird, `${((path.x+Math.random())*30)/lib.way.fps()}%`, `${(path.y*(30))/lib.way.fps()}%`, true);
 
 				if(lib.way.checkObjectsTouch(jose, bird) && !playingDeath) {
 					playingDeath = true;
@@ -419,6 +458,9 @@ var main = (async function() {
 					}, 5000);
 				}
 			});
+		} else if(scene == "dungeon") {
+			assureSungIs(cave_story);
+			setBackground();
 		}
 
 		if (!hasSword && sword !== null) {

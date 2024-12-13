@@ -1,5 +1,69 @@
 var speedSung = 0.5;
 
+var cave_story = `j z j z H z H z h z h z G z G G h
+j z j z H z H z h z h z G z G G h
+[jI] [zy] [je] [zy] [uH] [zy] [eH] [zy]
+[wh] [zy] [wh] [zy] [QG] [zy] [QG] [yG] h
+[jI] [zy] [je] [zy] [uH] [zy] [eH] [zy]
+[wh] [zy] [wh] [zy] [tsc] [xra] [zpe]|
+j k l zl kj| l zl kj g l lk jk h z k
+j k l zl kj| l zl kj g l lk jk h z k
+[ul] v [yl] u[vi] o[ok] v [pk] [vo]
+[oJ] v [pJ] [vo] [sg] c [tg] [yc] Y Y yY yY yt|
+s D [wd] [rd] s[yd] s[rd]Dds[wa] r y r
+[ul] v [yl] u[vi] o[ok] v [pk] [vo]
+[oJ] v [pJ] [vo] [sg] c g c| h J Z v|
+v c [vrok]| [tpl]| [TPL]| [zya]|
+[pb] d p d [VO] d O d
+[oB] d o d [bI] d I I o
+[pj] z j z [OH] z H z
+[hP] z h z [pG] z G G h
+[pb] d p d [VO] d O d
+[oB] d o d [bI] d I I o
+[pj] z j z [OH] z H z
+[hP] z h z [pG] z G G h
+[pj] [xa] [sj] d[xs] a[pH] x [sH] d[xs] a
+[ph] [li] [sh] s[la] p[ha] [xo] [hd] a
+[pj] [xa] [sj] d[xs] a[pH] x [sH] d[xs] a
+[ph] [li] [sh] s[la] p[xa] [zo] [kd] a
+f| d fg hh| j h h| j h l|
+tyYuytY Y yY yY yt|
+s D [wd] [rd]sas[yd]sas[rd]Dds[wa] r y r
+[lf] v [ld] f[vg] h[kh] v [kj] [vh]
+[hJ] v [jJ] [vh] [lg] c g c
+h [hg] [fJ] [gZ] [vh] g [vf] [gc]
+[vkh] g [ld] g [hL]| z|
+j z j z H z H z h z h z G z G G h
+j z j z H z H z h z h z G z G G h
+[jI] [zy] [je] [zy] [uH] [zy] [eH] [zy]
+[wh] [zy] [wh] [zy] [QG] [zy] [QG] [yG] h
+[jI] [zy] [je] [zy] [uH] [zy] [eH] [zy]
+[wh] [zy] [wh] [zy] [tsc] [xra] [zpe]|
+j k l zl kj| l zl kj g l lk jk h z k
+j k l zl kj| l zl kj g l lk jk h z k
+[ul] v [yl] u[vi] o[ok] v [pk] [vo]
+[oJ] v [pJ] [vo] [sg] c [tg] [yc] Y Y yY yY yt|
+s D [wd] [rd] s[yd] s[rd]Dds[wa] r y r
+[ul] v [yl] u[vi] o[ok] v [pk] [vo]
+[oJ] v [pJ] [vo] [sg] c g c| h J Z v|
+v c [vrok]| [tpl]| [TPL]| [zya]|
+[pb] d p d [VO] d O d
+[oB] d o d [bI] d I I o
+[pj] z j z [OH] z H z
+[hP] z h z [pG] z G G h
+[pb] d p d [VO] d O d
+[oB] d o d [bI] d I I o
+[pj] z j z [OH] z H z
+[hP] z h z [pG] z G G h
+[pj] [xa] [sj] d[xs] a[pH] x [sH] d[xs] a
+[ph] [li] [sh] s[la] p[ha] [xo] [hd] a
+[pj] [xa] [sj] d[xs] a[pH] x [sH] d[xs] a
+[ph] [li] [sh] s[la] p[xa] [zo] [kd] a
+f| d fg hh| j h h| j h l| tyYuytY Y yY yY yt|
+s D [wd] [rd]sas[yd]sas[rd]Dds[wa] r y r
+[lf] v [ld] f[vg] h[kh] v [kj] [vh]
+[hJ] v [jJ] [vh] [lg] c g c| h J Z v| v c [vk]`;
+
 var you_won = `[st] o u o [sf] o [uh] o [ya] o i [so]d[st] o u o
 [tj] p i p [ht] o [ul] o [hr] o [yg] [fo]g[tf] o u o
 [ip] asdfghjhgf[dtq]sap[ot0]
@@ -180,7 +244,7 @@ function asciiConverter(char) {
 }
 
 function robloxNoteToRealNote(robloxNote) {
-	// console.log(robloxNote);
+	console.log(robloxNote);
 	const noteMap = {
 		'1': 'C2',
 		'2': 'D2',
@@ -265,6 +329,7 @@ function noteNameToHz(noteName, octaveIncrease) {
 	};
 	const noteRegex = /^([A-G][#]?)(\d)$/;
 	const match = noteName.match(noteRegex);
+	console.log(noteName);
 	if (!match) {
 		throw new Error('Invalid note name');
 	}
@@ -290,13 +355,15 @@ var currentPlayingSungSource = null;
 var stopSong = false;
 
 function assureSungIs(song) {
-	if(currentPlayingSungSource != song && !stopSong) {
-		stopSong = true;
-		setTimeout(function() {
-			stopSong = false;
-			playSung(song);
-		}, ((sungSpeed * 2) + 1000));
-	}
+    if (currentPlayingSungSource !== song && !stopSong) {
+        stopSong = true;
+        setTimeout(function() {
+            if (currentPlayingSungSource !== song) {
+                playSung(song);
+            }
+            stopSong = false;
+        }, ((sungSpeed * 2) + 1000));
+    }
 }
 
 var sungWaves = ["triangle", "sine", "square", "triangle", "sawtooth"];
@@ -312,6 +379,8 @@ async function playSung(sung, converter) {
 	if(currentPlayingSungSource != null) {
 		return;
 	}
+
+	currentPlayingSungSource = sung;
 
 	const newAudioCtx = new(window.AudioContext || window.webkitAudioContext)();
 	if (converter == undefined) {
@@ -340,8 +409,12 @@ async function playSung(sung, converter) {
 		} else if (parsed[index].type == "play") {
 			var frequencies = [];
 			parsed[index].notes.forEach(function(note) {
-				frequencies.push(converter(note));
-				frequencies.push(converter(note, 2));
+				if(note.trim() != "") {
+					frequencies.push(converter(note));
+					frequencies.push(converter(note, 2));
+				} else {
+					console.warn("WHY?!?! empty note");
+				}
 			});
 			var oscs = [];
 			for(var i = 0; i < frequencies.length; i++) {

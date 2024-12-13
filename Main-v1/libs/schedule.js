@@ -6,7 +6,7 @@
 
 
 // but if you want you can disable it.
-const SCHEDULE = true;
+const SCHEDULE = false;
 const SCHEDULER_PREHANDLE = 0;
 
 if (SCHEDULE) {

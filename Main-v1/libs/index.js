@@ -124,17 +124,20 @@ const temple = lib.misc.createImage("temple.png", `
 	left: 50%;
 `);
 
-const cave = lib.misc.createImage("temple.png", `
+const cave = lib.misc.createImage("cave3depic.png", `
 	transform: translate(-50%, -50%);
 	max-width: 20%;
+	max-height: 20%;
 	position: absolute;
-	top: 20%;
+	bottom: 0%;
 	left: 50%;
 `);
+var caveGo = false;
 
 var main = (async function() {
 	document.body.appendChild(jose);
 	document.body.appendChild(temple);
+	document.body.appendChild(cave);
 
 	var mouse = {
 		x: 0,
@@ -257,6 +260,8 @@ var main = (async function() {
 		if (scene == "main") {
 			assureSungIs(oranina_of_crims);
 			if (lib.way.checkObjectsTouch(jose, temple)) {
+				caveGo = false;
+				cave.remove();
 				console.log("erect and drect touching!!!");
 				scene = "temple";
 				lib.css.SetPosition(jose, "50%", "80%");
@@ -273,7 +278,11 @@ var main = (async function() {
 					lib.css.SetPosition(img, `${(i*-220)+600}px`, "10%");
 					document.body.appendChild(img);
 				}
+			} else if(lib.way.checkObjectsTouch(cave, jose) && !caveGo) {
+				cave.remove();
+				setupDungeon();
 			}
+
 		} else if (scene == "temple") {
 			jose.style.transition = jose_transition;
 			var lastTrainPartOverScreen = lib.way.getMinsMaxs(trainAssets[trainAssets.length - 1].getBoundingClientRect()).minX > window.innerWidth;

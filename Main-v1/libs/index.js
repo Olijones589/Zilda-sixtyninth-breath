@@ -39,13 +39,31 @@ playButton.addEventListener("mouseleave", function() {
 	playButton.style.fontSize = "50%";
 });
 
+var currentDungeonRoom = 0;
+var currentDungeonObjects = [];
+
 function setupDungeon() {
 	scene = "dungeon";
 	lib.css.TransitionlessSetPosition(jose, "50%", "50%");
 	lib.css.setBackground("caveepic.avif");
+
 	if(temple) {
 		temple.remove();
 	}
+
+	renderRoom();	
+}
+
+function renderRoom() {
+	var room = gameDungeon[currentDungeonRoom];
+
+	room.objects.forEach(objectName => {
+		var newObject = lib.misc.createImage(objectName.type, "");
+		lib.css.TransitionlessSetPosition(newObject.type, newObject.x, newObject.y);
+		currentDungeonObjects.push(newObject);
+	});
+
+	console.log(room);
 }
 
 // Main game

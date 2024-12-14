@@ -33,14 +33,14 @@ function createDungeon(roomsCount) {
                 "x": Math.random() * 100,
                 "y": Math.random() * 100
             });
-
-            room.links = {
-                "top": Math.floor(Math.random() * roomsCount),
-                "bottom": Math.floor(Math.random() * roomsCount),
-                "left": Math.floor(Math.random() * roomsCount),
-                "right": Math.floor(Math.random() * roomsCount)
-            };
         }
+
+        room.links = {
+            "top": Math.floor(Math.random() * roomsCount),
+            "bottom": Math.floor(Math.random() * roomsCount),
+            "left": Math.floor(Math.random() * roomsCount),
+            "right": Math.floor(Math.random() * roomsCount)
+        };
 
         rooms.push(room);
     }

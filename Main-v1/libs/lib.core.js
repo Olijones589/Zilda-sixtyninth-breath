@@ -79,6 +79,43 @@ lib.misc.createButton = function(text, clickHandler) {
 	return button;
 }
 
+
+lib.misc.storyGo = function(text) {
+	var stor_dialog = document.createElement("div");
+
+	var winrect = {
+		minX: 0,
+		maxX: window.innerWidth,
+		minY: 0,
+		maxY: window.innerHeight
+	};	
+
+	stor_dialog.innerText = text;
+	stor_dialog.style.color = "white";
+	stor_dialog.style.borderRadius = "10px";
+	stor_dialog.style.backgroundColor = "black";
+	stor_dialog.style.height = "fit-content";
+	stor_dialog.style.zIndex = "238572348237492";
+	stor_dialog.style.fontSize = "100px";
+	
+	stor_dialog.style.position = "absolute";
+	lib.css.SetPosition(stor_dialog, "0%", "0%");
+	
+	stor_dialog.appendChild(document.createElement("br"));
+	stor_dialog.appendChild(document.createElement("br"));
+	document.body.appendChild(stor_dialog);
+
+	var ninterval = setInterval(function() {
+		console.log("MV DIA");
+		lib.css.MovePosition(stor_dialog, "0%", "-1%");
+		var objectRect = lib.way.getMinsMaxs(stor_dialog.getBoundingClientRect());
+		if((!lib.way.intersect(objectRect, winrect))) {
+			clearInterval(ninterval);
+			stor_dialog.remove();
+		}
+	}, 1);
+}
+
 // Based on the way lib.js does it!
 lib.way = {};
 

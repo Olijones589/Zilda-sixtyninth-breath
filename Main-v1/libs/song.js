@@ -244,7 +244,6 @@ function asciiConverter(char) {
 }
 
 function robloxNoteToRealNote(robloxNote) {
-	console.log(robloxNote);
 	const noteMap = {
 		'1': 'C2',
 		'2': 'D2',
@@ -329,7 +328,6 @@ function noteNameToHz(noteName, octaveIncrease) {
 	};
 	const noteRegex = /^([A-G][#]?)(\d)$/;
 	const match = noteName.match(noteRegex);
-	console.log(noteName);
 	if (!match) {
 		throw new Error('Invalid note name');
 	}

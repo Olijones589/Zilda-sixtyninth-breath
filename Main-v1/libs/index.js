@@ -58,20 +58,22 @@ var theseAreWalls = [];
 var theseAreWallsPushed = false;
 
 theseAreWalls.push({
-	image: lib.misc.createImage("THISISAWALL.png", `
+	image: lib.misc.createImage("wall.jpg", `
 	transform: translate(-50%, -50%);
-	max-width: 20%;
+	width: 100%;
+	height: 10%;
 	position: absolute;
-	top: 0%;
+	top: 10%;
 	left: 50%;
 `),
 	direction: "top"
 }); // Top wall
 
 theseAreWalls.push({
-	image: lib.misc.createImage("THISISAWALL.png", `
+	image: lib.misc.createImage("wall.jpg", `
 	transform: translate(-50%, -50%);
-	max-width: 20%;
+	width: 100%;
+	height: 10%;
 	position: absolute;
 	bottom: 0%;
 	left: 50%;
@@ -80,20 +82,22 @@ theseAreWalls.push({
 }); // Bottom wall
 
 theseAreWalls.push({
-	image: lib.misc.createImage("THISISAWALL.png", `
+	image: lib.misc.createImage("wall.jpg", `
 	transform: translate(-50%, -50%);
-	max-width: 20%;
+	width: 10%;
+	height: 100%;
 	position: absolute;
 	top: 50%;
-	left: 0%;
+	left: 10%;
 `),
 	direction: "left"
 }); // Left wall
 
 theseAreWalls.push({
-	image: lib.misc.createImage("THISISAWALL.png", `
+	image: lib.misc.createImage("wall.jpg", `
 	transform: translate(-50%, -50%);
-	max-width: 20%;
+	width: 10%;
+	height: 100%;
 	position: absolute;
 	top: 50%;
 	right: 0%;
@@ -159,6 +163,14 @@ var difficulty = 20;
 var lastSpoken = (+Date.now());
 var swordIsPaimon = false;
 var gameDungeon = createDungeon(50);
+var specialRoom = Math.floor(Math.random() * gameDungeon.length);
+var scrol = lib.misc.createImage("scrollyscrob.jpg", `
+left: 10%;
+top: 10%;
+width: 10%;
+height: 10%;
+`);
+
 var paimonHurts = [
 	"Paimon hurts!",
 	"Paimon is NOT emergency food!",
@@ -218,6 +230,7 @@ var main = (async function () {
 	document.body.appendChild(jose);
 	document.body.appendChild(temple);
 	document.body.appendChild(cave);
+	document.body.appendChild(scrol);
 
 	var mouse = {
 		x: 0,
@@ -338,8 +351,15 @@ var main = (async function () {
 		fpsCounter.innerText = `${Math.round(lib.way.fps())} fps`;
 
 		if (scene == "main") {
+			if(lib.way.checkObjectsTouch(jose, scrol)) {
+				lib.audio.playSound(1000, 3000, "sawtooth");
+				scrol.remove();
+				lib.misc.storyGo(`Jose Ying Ying Ling Ling Gary Anton the third was a boy born in Hawaii that loved slaying things like his childhood snail, he really loved slaying things. He once was in his grandpa's attic and found an old journal covered in dust and a little bit of poop because his grandpa liked to poop on things such as books and dishes, along with his wife, Rachael Hard Man Wood Anton. As he reads the journal he realized his whole life was a mistake and he should cease to exist. The journal leads to a secret man cave with a portal leading to The Universe of Ling Bing, China. Once he enters the portal to Ling Bing, China, he finds himself in a deserted desert next to a pyramid and a cave that is for some reason made of normal stone instead of sandstone. He enters the pyramid, grabs a longsword, takes a train and realizes he has entered Hell, he thinks he has died but sees a hoard of his sisters sleep paralysis demons hunting him with big long pitchforks. He then proceeds to slap them with his longsword and teleports back to the desert where he then finds an anime girl and a bunch of birds. The story is not yet decided so I have no clue what happens after that.`);
+			}
+
 			assureSungIs(oranina_of_crims);
 			if (lib.way.checkObjectsTouch(jose, temple)) {
+				scrol.remove();
 				caveGo = false;
 				cave.remove();
 				console.log("erect and drect touching!!!");
@@ -360,6 +380,7 @@ var main = (async function () {
 				}
 			} else if (lib.way.checkObjectsTouch(cave, jose) && !caveGo) {
 				cave.remove();
+				scrol.remove();
 				setupDungeon();
 			}
 
@@ -435,8 +456,8 @@ var main = (async function () {
 							}, 2 * 1000);
 						}, 2000);
 					}
-					// }, 15 * 1000);
-				}, 15);
+				}, 15 * 1000);
+				// }, 15);
 
 				scheduler.timeout(function () {
 					song = action;
@@ -507,7 +528,7 @@ var main = (async function () {
 			});
 		} else if (scene == "dead") {
 			song = tension;
-			document.body.innerHTML = "<div style='color:red;background-color:black;'><h1>Thou art DEAD</h1><p>YOU NEVER GOT TO SEE THE LOLIs</p><div>";
+			document.body.innerHTML = "<div style='color:red;background-color:black;'><h1>Thou art DEAD</h1><p>YOU NEVER GOT TO SEE THE beans</p><div>";
 			var sound = lib.audio.playSound(500 + (Math.random() * 6000), 1000000, "sawtooth");
 			sound.setVolume(1);
 		} else if (scene == "hell_safe") {
@@ -566,6 +587,16 @@ var main = (async function () {
 			});
 		} else if (scene == "dungeon") {
 			assureSungIs(cave_story);
+
+			for(var i = 0; i < theseAreWalls.length; i++) {
+				var currentItem = theseAreWalls[i];
+				if(lib.way.checkObjectsTouch(currentItem.image, jose)) {
+					currentDungeonRoom = gameDungeon[currentDungeonRoom].links[currentItem.direction];
+					lib.css.TransitionlessSetPosition(jose, "50%", "50%");
+					renderRoom();
+					break;
+				}
+			}
 		}
 
 		if (!hasSword && sword !== null) {

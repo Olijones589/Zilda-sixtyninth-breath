@@ -39,6 +39,15 @@ playButton.addEventListener("mouseleave", function() {
 	playButton.style.fontSize = "50%";
 });
 
+function setupDungeon() {
+	scene = "dungeon";
+	lib.css.TransitionlessSetPosition(jose, "50%", "50%");
+	lib.css.setBackground("caveepic.avif");
+	if(temple) {
+		temple.remove();
+	}
+}
+
 // Main game
 var fpsCounter = document.createElement("p");
 fpsCounter.innerText = "... fps";
@@ -108,6 +117,14 @@ const jose = lib.misc.createImage("jose.png", `
 `);
 
 const temple = lib.misc.createImage("temple.png", `
+	transform: translate(-50%, -50%);
+	max-width: 20%;
+	position: absolute;
+	top: 20%;
+	left: 50%;
+`);
+
+const cave = lib.misc.createImage("temple.png", `
 	transform: translate(-50%, -50%);
 	max-width: 20%;
 	position: absolute;
@@ -460,7 +477,6 @@ var main = (async function() {
 			});
 		} else if(scene == "dungeon") {
 			assureSungIs(cave_story);
-			setBackground();
 		}
 
 		if (!hasSword && sword !== null) {

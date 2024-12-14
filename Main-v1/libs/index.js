@@ -588,13 +588,23 @@ var main = (async function () {
 		} else if (scene == "dungeon") {
 			assureSungIs(cave_story);
 
-			for(var i = 0; i < theseAreWalls.length; i++) {
-				var currentItem = theseAreWalls[i];
-				if(lib.way.checkObjectsTouch(currentItem.image, jose)) {
-					currentDungeonRoom = gameDungeon[currentDungeonRoom].links[currentItem.direction];
-					lib.css.TransitionlessSetPosition(jose, "50%", "50%");
-					renderRoom();
-					break;
+			if(currentDungeonRoom == specialRoom) {
+			} else {
+				for(var i = 0; i < theseAreWalls.length; i++) {
+					var currentItem = theseAreWalls[i];
+					if(lib.way.checkObjectsTouch(currentItem.image, jose)) {
+						currentDungeonRoom = gameDungeon[currentDungeonRoom].links[currentItem.direction];
+						lib.css.TransitionlessSetPosition(jose, "50%", "50%");
+						renderRoom();
+						if(currentDungeonRoom == specialRoom) {
+							theseAreWalls.forEach(wall => {
+								wall.image.remove();
+							});
+							var bookofzongorgononilil = lib.misc.createImage("jdkl.png", "");
+							document.body.appendChild(bookofzongorgononilil);
+						}
+						break;
+					}
 				}
 			}
 		}

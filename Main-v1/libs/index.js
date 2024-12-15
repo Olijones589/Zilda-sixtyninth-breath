@@ -39,6 +39,7 @@ playButton.addEventListener("mouseleave", function () {
 	playButton.style.fontSize = "50%";
 });
 
+var bookofzongorgononilil;
 var currentDungeonRoom = 0;
 var currentDungeonObjects = [];
 
@@ -106,7 +107,7 @@ theseAreWalls.push({
 }); // Right wall
 
 function renderRoom() {
-	if(!theseAreWallsPushed) {
+	if (!theseAreWallsPushed) {
 		theseAreWalls.forEach(wall => {
 			document.body.appendChild(wall.image);
 		});
@@ -130,6 +131,49 @@ function renderRoom() {
 	});
 
 	console.log(room);
+}
+
+function matrix() {
+	(function () {
+		const characters = Array.from({ length: 96 }, (_, i) => String.fromCharCode(0x30A0 + i));
+		const numberOfColumns = Math.floor(window.innerWidth / 20);
+
+		function createCharElement(columnIndex) {
+			const char = document.createElement("div");
+			char.textContent = characters[Math.floor(Math.random() * characters.length)];
+			char.style.position = "absolute";
+			char.style.color = "#0f0";
+			char.style.fontSize = "20px";
+			char.style.opacity = "0.8";
+			char.style.left = `${columnIndex * 20}px`;
+			char.style.top = "0px";
+			document.body.appendChild(char);
+
+			let position = 0;
+			const fallSpeed = Math.random() * 3 + 2;
+
+			function fall() {
+				position += fallSpeed;
+				char.style.top = `${position}px`;
+
+				if (position < window.innerHeight) {
+					requestAnimationFrame(fall);
+				} else {
+					document.body.removeChild(char);
+				}
+			}
+
+			fall();
+		}
+
+		function generateMatrixRain() {
+			for (let i = 0; i < numberOfColumns; i++) {
+				setInterval(() => createCharElement(i), Math.random() * 100);
+			}
+		}
+
+		generateMatrixRain();
+	})();
 }
 
 // Main game
@@ -164,6 +208,7 @@ var lastSpoken = (+Date.now());
 var swordIsPaimon = false;
 var gameDungeon = createDungeon(50);
 var specialRoom = Math.floor(Math.random() * gameDungeon.length);
+var bookofzongorgononililTaken = false;
 var scrol = lib.misc.createImage("scrollyscrob.jpg", `
 left: 10%;
 top: 10%;
@@ -351,7 +396,7 @@ var main = (async function () {
 		fpsCounter.innerText = `${Math.round(lib.way.fps())} fps`;
 
 		if (scene == "main") {
-			if(lib.way.checkObjectsTouch(jose, scrol)) {
+			if (lib.way.checkObjectsTouch(jose, scrol)) {
 				lib.audio.playSound(1000, 3000, "sawtooth");
 				scrol.remove();
 				lib.misc.storyGo(`Jose Ying Ying Ling Ling Gary Anton the third was a boy born in Hawaii that loved slaying things like his childhood snail, he really loved slaying things. He once was in his grandpa's attic and found an old journal covered in dust and a little bit of poop because his grandpa liked to poop on things such as books and dishes, along with his wife, Rachael Hard Man Wood Anton. As he reads the journal he realized his whole life was a mistake and he should cease to exist. The journal leads to a secret man cave with a portal leading to The Universe of Ling Bing, China. Once he enters the portal to Ling Bing, China, he finds himself in a deserted desert next to a pyramid and a cave that is for some reason made of normal stone instead of sandstone. He enters the pyramid, grabs a longsword, takes a train and realizes he has entered Hell, he thinks he has died but sees a hoard of his sisters sleep paralysis demons hunting him with big long pitchforks. He then proceeds to slap them with his longsword and teleports back to the desert where he then finds an anime girl and a bunch of birds. The story is not yet decided so I have no clue what happens after that.`);
@@ -461,6 +506,7 @@ var main = (async function () {
 
 				scheduler.timeout(function () {
 					song = action;
+					assureSungIs("");
 					difficulty -= 10;
 				}, 5000);
 			}
@@ -586,23 +632,39 @@ var main = (async function () {
 				}
 			});
 		} else if (scene == "dungeon") {
-			assureSungIs(cave_story);
-
-			if(currentDungeonRoom == specialRoom) {
+			if (!bookofzongorgononililTaken) {
+				assureSungIs(cave_story);
 			} else {
-				for(var i = 0; i < theseAreWalls.length; i++) {
+				assureSungIs("");
+				song = action;
+			}
+
+			if (currentDungeonRoom == specialRoom) {
+				if (lib.way.checkObjectsTouch(bookofzongorgononilil, jose) && !bookofzongorgononililTaken) {
+					lib.audio.playMovingSound(1000, 2000, 1000, "sine");
+					bookofzongorgononililTaken = true;
+					lib.css.setBackground("underworld2.jpg");
+					lib.css.SetPosition(jose, "50%", "50%");
+					bookofzongorgononilil.remove();
+				}
+			} else {
+				for (var i = 0; i < theseAreWalls.length; i++) {
 					var currentItem = theseAreWalls[i];
-					if(lib.way.checkObjectsTouch(currentItem.image, jose)) {
+					if (lib.way.checkObjectsTouch(currentItem.image, jose)) {
 						currentDungeonRoom = gameDungeon[currentDungeonRoom].links[currentItem.direction];
 						lib.css.TransitionlessSetPosition(jose, "50%", "50%");
-						renderRoom();
-						if(currentDungeonRoom == specialRoom) {
+
+						if (currentDungeonRoom == specialRoom) {
 							theseAreWalls.forEach(wall => {
 								wall.image.remove();
 							});
-							var bookofzongorgononilil = lib.misc.createImage("jdkl.png", "");
+
+							bookofzongorgononilil = lib.misc.createImage("jdkl.png", "");
 							document.body.appendChild(bookofzongorgononilil);
+						} else {
+							renderRoom();
 						}
+
 						break;
 					}
 				}

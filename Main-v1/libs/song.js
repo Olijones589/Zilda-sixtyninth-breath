@@ -352,15 +352,20 @@ function robloxNoteConverter(rnote, o) {
 var currentPlayingSungSource = null;
 var stopSong = false;
 
+function stopGlobalSong() {
+	song = nosong;
+}
+
 function assureSungIs(song) {
     if (currentPlayingSungSource !== song && !stopSong) {
         stopSong = true;
+		stopGlobalSong();
         setTimeout(function() {
             if (currentPlayingSungSource !== song) {
                 playSung(song);
             }
             stopSong = false;
-        }, ((sungSpeed * 2) + 1000));
+        }, ((sungSpeed * 2)));
     }
 }
 
@@ -542,6 +547,90 @@ function action() {
 	}, 200);
 }
 
+function tension2() {
+    lib.audio.playSound(440, 500); // Base tone A4 for 500ms
+
+    if (height > 100) {
+        height -= 30;
+    } else if (height < 100) {
+        height += 20;
+    }
+
+    // lib.audio.playMovingSound(220, 200, 800, "triangle"); // A lower harmonic tone
+    // lib.audio.playMovingSound(330, 250, 800, "sine"); // Third interval for harmony
+    // lib.audio.playMovingSound(440, 300, 800, "sawtooth"); // Fifth interval
+
+    scheduler.timeout(function() {
+        lib.audio.playSound(660, 300);
+        // lib.audio.playMovingSound(550, 300, 400, "square");
+
+        if (Math.random() > 0.6) {
+            // scheduler.timeout(function() {
+            //     lib.audio.playMovingSound(880, 600, 300, "sine");
+
+            //     if (Math.random() > 0.5) {
+            //         scheduler.timeout(function() {
+            //             lib.audio.playMovingSound(700, 600, 200, "triangle");
+            //         }, 100);
+            //         height = 500;
+            //     } else {
+            //         lib.audio.playMovingSound(400, 300, 300, "square");
+            //         height = 120;
+            //     }
+            // }, 400);
+        } else {
+            // lib.audio.playMovingSound(600, 300 + (Math.random() * 400), 500, "sawtooth");
+            height = 200;
+        }
+    }, 300);
+
+    scheduler.timeout(function() {
+        lib.audio.playSound(520, 600);
+    }, 700);
+}
+
+function action_tear() {
+    lib.audio.playSound(440, 500, "triangle"); // Base tone A4 for 500ms
+
+    if (height > 100) {
+        height -= 30;
+    } else if (height < 100) {
+        height += 20;
+    }
+
+    lib.audio.playSound((220 + 200) / 2, 800, "triangle");
+    lib.audio.playSound((330 + 250) / 2, 800, "triangle");
+    lib.audio.playSound((440 + 300) / 2, 800, "triangle");
+
+    scheduler.timeout(function() {
+        lib.audio.playSound(660, 300);
+        // lib.audio.playMovingSound(550, 300, 400, "triangle");
+
+        if (Math.random() > 0.6) {
+            scheduler.timeout(function() {
+                lib.audio.playMovingSound(880, 600, 300, "triangle");
+
+                if (Math.random() > 0.5) {
+                    scheduler.timeout(function() {
+                        lib.audio.playMovingSound(700, 600, 200, "triangle");
+                    }, 100);
+                    height = 500;
+                } else {
+                    lib.audio.playMovingSound(400, 300, 300, "triangle");
+                    height = 120;
+                }
+            }, 400);
+        } else {
+            // lib.audio.playMovingSound(600, 300 + (Math.random() * 400), 500, "triangle");
+            height = 200;
+        }
+    }, 300);
+
+    scheduler.timeout(function() {
+        lib.audio.playSound(520, 600);
+    }, 700);
+}
+
 function preaction() {
 	lib.audio.playSound(100, 1000);
 	if (height > 100) {
@@ -570,8 +659,8 @@ function preaction() {
 	}, 200);
 }
 
-var song = tension;
+var song = nosong;
 
-// scheduler.interval(function() {
-//	song();
-// }, 1000);
+scheduler.interval(function() {
+	song();
+}, 1000);

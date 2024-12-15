@@ -415,19 +415,17 @@ async function loadAllScripts() {
     try {
         const startTime = Date.now();
 
-        const scriptPromises = toLoad.map(async (file) => {
+        for (const file of toLoad) {
             const dataUri = await fetchAndEncodeFile(file);
             const script = document.createElement("script");
             script.src = dataUri;
             document.body.appendChild(script);
 
-            return new Promise((resolve, reject) => {
-                script.onload = () => resolve(file);
+            await new Promise((resolve, reject) => {
+                script.onload = () => resolve();
                 script.onerror = () => reject(new Error(`${file} couldn't load.`));
             });
-        });
-
-        const results = await Promise.all(scriptPromises);
+        }
 
         const elapsedTime = ((Date.now() - startTime) / 1000).toFixed(2);
         p.innerText = `All scripts loaded in ${elapsedTime} seconds.`;

@@ -44,6 +44,17 @@ var currentDungeonRoom = 0;
 var currentDungeonObjects = [];
 
 function setupDungeon() {
+	setInterval(function() {
+		if(currentDungeonObjects.length != 0 && scene != "dead") {
+			currentDungeonObjects.forEach(object => {
+				console.log(object)
+				if(lib.way.checkObjectsTouch(jose, object.image)) {
+					createTimedDialog("Jose", `A ${object.type}!!!`, 2000);
+				}
+			});
+		}
+	}, 1000);
+
 	scene = "dungeon";
 	lib.css.TransitionlessSetPosition(jose, "50%", "50%");
 	lib.css.setBackground("caveepic.avif");
@@ -117,7 +128,7 @@ function renderRoom() {
 
 	if (currentDungeonObjects.length > 0) {
 		currentDungeonObjects.forEach(object => {
-			object.remove();
+			object.image.remove();
 		});
 	}
 
@@ -126,7 +137,10 @@ function renderRoom() {
 		var newObject = lib.misc.createImage("error.png", "");
 		console.log(object.x, object.y)
 		lib.css.TransitionlessSetPosition(newObject, `${object.x}%`, `${object.y}%`);
-		currentDungeonObjects.push(newObject);
+		currentDungeonObjects.push({
+			"image" : newObject,
+			"type" : object.type
+		});
 		document.body.appendChild(newObject);
 	});
 
@@ -135,7 +149,8 @@ function renderRoom() {
 
 function matrix() {
 	(function () {
-		const characters = Array.from({ length: 96 }, (_, i) => String.fromCharCode(0x30A0 + i));
+		// const characters = Array.from({ length: 96 }, (_, i) => String.fromCharCode(0x30A0 + i));
+		const characters = ["6", "9"];
 		const numberOfColumns = Math.floor(window.innerWidth / 20);
 
 		function createCharElement(columnIndex) {
@@ -168,7 +183,7 @@ function matrix() {
 
 		function generateMatrixRain() {
 			for (let i = 0; i < numberOfColumns; i++) {
-				setInterval(() => createCharElement(i), Math.random() * 100);
+				setInterval(() => createCharElement(i), Math.random() * 10000);
 			}
 		}
 
@@ -197,18 +212,25 @@ var demons = [];
 var birds = [];
 var swordAttached = false;
 var speed = 5;
+var boss;
+var boss_minions = [];
 var swordRotation = 0;
 var hellBackground;
+var amountNavigated = 0;
 var pewpews = [];
+var boss_shield = lib.misc.createImage("sigau.png", "width:20%;height:20%;opacity:0.5;left:50%;top:10%;transform:translate(-50%,-50%);transition:0.2s;");
 var swordInterval = null;
 var swordBroken = false;
+var bossAttacking = false;
 var canBreathe = false;
 var difficulty = 20;
+var timeOnBoss = 0;
 var lastSpoken = (+Date.now());
 var swordIsPaimon = false;
 var gameDungeon = createDungeon(50);
 var specialRoom = Math.floor(Math.random() * gameDungeon.length);
 var bookofzongorgononililTaken = false;
+var boss_pewpews = [];
 var scrol = lib.misc.createImage("scrollyscrob.jpg", `
 left: 10%;
 top: 10%;
@@ -476,7 +498,7 @@ var main = (async function () {
 							swordAttached = false;
 							lib.audio.playMovingSound(500, 100, 0.1, "sawtooth");
 							lib.audio.playMovingSound(400, 200, 0.1, "sawtooth");
-							jose.src = "jose_cursed.png";
+							jose.src = "assets/jose_cursed.png";
 						}, 1000);
 						lib.css.setBackground("underworld2.jpg");
 						swordBroken = true;
@@ -494,7 +516,7 @@ var main = (async function () {
 							lib.audio.playMovingSound(1000, 2000, 2);
 							scheduler.timeout(function () {
 								scene = "black";
-								jose.src = "jose.png";
+								jose.src = "assets/jose.png";
 								lib.css.setBackground("desert.jpg");
 								window.document.body.style.backdropFilter = "";
 								canBreathe = true;
@@ -635,17 +657,131 @@ var main = (async function () {
 			if (!bookofzongorgononililTaken) {
 				assureSungIs(cave_story);
 			} else {
-				assureSungIs("");
-				song = action;
-			}
+				stopSong = true;
+				var minionid = 0;
+				boss_minions.forEach(minion => {
+					minionid++;
+					var minionMinsMaxs = lib.way.getMinsMaxs(minion.getBoundingClientRect());
+					var joseMinsMaxs = lib.way.getMinsMaxs(jose.getBoundingClientRect());
+		
+					var pathfindingAlgo;
+					if(bossAttacking) {
+						pathfindingAlgo = lib.misc.pathfindHoverAtTop;
+						minionMinsMaxs.minX += (minionid * 200) - 500;
+					} else {
+						pathfindingAlgo = lib.misc.pathfind;
+					}
+		
+					var pathfinding = pathfindingAlgo({
+						x: minionMinsMaxs.minX + (Math.random() * 10),
+						y: minionMinsMaxs.minY + (Math.random() * 10)
+					}, {
+						x: joseMinsMaxs.minX + (Math.random() * 10),
+						y: joseMinsMaxs.minY + (Math.random() * 10)
+					});
+		
+					// console.warn(pathfinding);
+		
+					if(lib.way.checkObjectsTouch(jose, minion)) {
+						scene = "dead";
+					}
 
+					lib.css.MovePosition(minion, `${((pathfinding.x) / lib.way.fps()) * 30}%`, `${((pathfinding.y) / lib.way.fps()) * 30}%`, false);
+				});
+
+				song = action;
+
+				if (boss_pewpews.length < 30 && bossAttacking) {
+					var image = lib.misc.createImage("pain_floor.png", "min-width:5%;transition:2s;");
+					var posData = [`${Math.round(Math.random() * 100)}%`, boss.style.top]
+					var target = [jose.style.left, jose.style.top];
+					var index = boss_pewpews.length;
+
+					var rrotInterval = setInterval(function () {
+						image.style.transform = `rotate(${(Math.random() * (360 * 2)) - 360}deg)`;
+
+						if (lib.way.checkObjectsTouch(sword, image)) {
+							image.remove();
+							clearInterval(rrotInterval);
+							lib.audio.playSound(500, 100, "sine");
+						}
+
+						if(lib.way.checkObjectsTouch(jose, image)) {
+							scene = "dead";
+						}
+					}, 50);
+
+					boss_pewpews.push({
+						"img": image,
+						"x": posData[0],
+						"y": posData[1],
+						"tx": `calc(${target[0]} + ${(Math.random() * 10) - 5}%)`,
+						"ty": `calc(${target[1]} + ${(Math.random() * 10) - 5}%)`
+					});
+
+					setTimeout(function () {
+						image.remove();
+						setTimeout(function () {
+							boss_pewpews = [];
+						}, 0);
+						clearInterval(rrotInterval);
+					}, 1600);
+
+					setTimeout(function () {
+						lib.css.SetPosition(image, target[0], target[1]);
+					}, 100);
+
+					lib.css.TransitionlessSetPosition(image, posData[0], posData[1]);
+					document.body.appendChild(image);
+				}
+
+				if (boss_minions.length < 5) {
+					var img = lib.misc.createImage("sword.png", "width:100px;height:100px;left:100px;top:100px;");
+					boss_minions.push(img);
+					document.body.appendChild(img);
+				}
+
+				if(bossAttacking) {
+					boss_shield.style.opacity = 0;
+					sword.style.opacity = 1;
+				} else {
+					sword.style.opacity = 0.5;
+					if(lib.way.checkObjectsTouch(sword, boss)) {
+						boss_shield.style.opacity = 0.7;
+					} else {
+						boss_shield.style.opacity = 0.5;
+					}
+				}
+			}
+			
 			if (currentDungeonRoom == specialRoom) {
 				if (lib.way.checkObjectsTouch(bookofzongorgononilil, jose) && !bookofzongorgononililTaken) {
-					lib.audio.playMovingSound(1000, 2000, 1000, "sine");
-					bookofzongorgononililTaken = true;
-					lib.css.setBackground("underworld2.jpg");
-					lib.css.SetPosition(jose, "50%", "50%");
+					assureSungIs("");
+
 					bookofzongorgononilil.remove();
+
+					lib.misc.storyGo("You must defeat the Skibidi Sigma Aura Demon before it spreads its chaotic vibes across the multiverse. Only by channeling the ultimate rizz and mastering the forbidden NPC dance can you stand a chance. Grab your drip, summon your squad, and prepare for the ultimate battle of skill and style! You must defeat the Skibidi Sigma Aura Demon before it spreads its chaotic vibes across the multiverse. Only by channeling the ultimate rizz and mastering the forbidden NPC dance can you stand a chance. Grab your drip, summon your squad, and prepare for the ultimate battle of skill and style! You must defeat the Skibidi Sigma Aura Demon before it spreads its chaotic vibes across the multiverse. Only by channeling the ultimate rizz and mastering the forbidden NPC dance can you stand a chance. Grab your drip, summon your squad, and prepare for the ultimate battle of skill and style!");
+
+					setTimeout(function() {
+						sword = lib.misc.createImage("wall.jpg", "width:20%;height:10%;");
+						hasSword = true;
+						document.body.appendChild(sword);
+	
+						lib.audio.playMovingSound(1000, 2000, 1000, "sine");
+						bookofzongorgononililTaken = true;
+						lib.css.setBackground("underworld2.jpg");
+						lib.css.SetPosition(jose, "50%", "50%");
+	
+						boss = lib.misc.createImage("demonig.png", "max-width:15%;transform:translate(-50%,-50%);");
+						lib.css.SetPosition(boss, "50%", "10%");
+						document.body.appendChild(boss);
+	
+						document.body.appendChild(boss_shield);
+	
+						setInterval(function() {
+							bossAttacking = !bossAttacking;
+						}, 5000);
+					}, 5000);
 				}
 			} else {
 				for (var i = 0; i < theseAreWalls.length; i++) {
@@ -660,9 +796,17 @@ var main = (async function () {
 							});
 
 							bookofzongorgononilil = lib.misc.createImage("jdkl.png", "");
+							// matrix();
 							document.body.appendChild(bookofzongorgononilil);
 						} else {
+							amountNavigated++;
 							renderRoom();
+							if (amountNavigated > 20) {
+								gameDungeon[currentDungeonRoom].links.top = specialRoom;
+								gameDungeon[currentDungeonRoom].links.bottom = specialRoom;
+								gameDungeon[currentDungeonRoom].links.left = specialRoom;
+								gameDungeon[currentDungeonRoom].links.right = specialRoom;
+							}
 						}
 
 						break;

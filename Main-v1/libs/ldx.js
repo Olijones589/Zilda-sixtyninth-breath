@@ -358,7 +358,7 @@ p.style.left = "50%";
 p.style.top = "50%";
 p.style.transform = "translate(-50%, -50%)";
 p.style.color = "white";
-document.body.appendChild(p);
+// document.body.appendChild(p);
 
 document.body.style.backgroundColor = "black";
 

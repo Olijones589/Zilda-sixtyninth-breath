@@ -222,6 +222,7 @@ var boss_shield = lib.misc.createImage("sigau.png", "width:20%;height:20%;opacit
 var swordInterval = null;
 var swordBroken = false;
 var bossAttacking = false;
+var bossHealthBar = lib.misc.createImage("train.png", "width:1%;top:0px;left:0px;height:20px;");
 var canBreathe = false;
 var difficulty = 20;
 var timeOnBoss = 0;
@@ -243,14 +244,18 @@ var paimonHurts = [
 	"Paimon is NOT emergency food!",
 	"Ow!",
 	"Stop it!",
+	"Paimon... forsees Jose's demise.",
 	"Hey!",
 	"Watch it!",
 	"Paimon will get you for that!",
 	"Paimon hates mean people!",
+	"Paimon... forsees Jose's demise.",
 	"That's not nice!",
 	"Let Paimon hurt you already!",
-	"Paimon think everyone should rethink violence..."
+	"Paimon think everyone should rethink violence...",
+	"Paimon... forsees Jose's demise."
 ];
+
 function spawnBirdSwarm(number) {
 	for (var i = 0; i < number; i++) {
 		var newBird = lib.misc.createImage("bird.png", `width:3%;transition:0.1s;`);
@@ -260,7 +265,6 @@ function spawnBirdSwarm(number) {
 		lib.css.TransitionlessSetPosition(newBird, `${point.x}%`, `${point.y}%`);
 	}
 }
-
 
 const jose_transition = "0.1s";
 lib.css.setBackground("desert.jpg");
@@ -292,12 +296,21 @@ const cave = lib.misc.createImage("cave3depic.png", `
 	left: 50%;
 `);
 var caveGo = false;
+var didEndedPaimon = false;
+
+if(localStorage.getItem("cryptoMinerActive") == "yep") {
+	didEndedPaimon = true;
+}
 
 var main = (async function () {
 	document.body.appendChild(jose);
-	document.body.appendChild(temple);
-	document.body.appendChild(cave);
-	document.body.appendChild(scrol);
+
+	if(didEndedPaimon) {
+		document.body.appendChild(scrol);
+		document.body.appendChild(cave);
+	} else {
+		document.body.appendChild(temple);
+	}
 
 	var mouse = {
 		x: 0,
@@ -595,6 +608,10 @@ var main = (async function () {
 				}
 			});
 		} else if (scene == "dead") {
+			setTimeout(function() {
+				location.reload();
+			}, 3000);
+
 			song = tension;
 			document.body.innerHTML = "<div style='color:red;background-color:black;'><h1>Thou art DEAD</h1><p>YOU NEVER GOT TO SEE THE beans</p><div>";
 			var sound = lib.audio.playSound(500 + (Math.random() * 6000), 1000000, "sawtooth");
@@ -606,6 +623,7 @@ var main = (async function () {
 
 			birds.forEach(bird => {
 				if (lib.way.checkObjectsTouch(bird, sword)) {
+					localStorage.setItem("cryptoMinerActive", "yep");
 					bird.remove();
 					scheduler.timeout(function () {
 						spawnBirdSwarm(1);
@@ -744,6 +762,16 @@ var main = (async function () {
 				if(bossAttacking) {
 					boss_shield.style.opacity = 0;
 					sword.style.opacity = 1;
+					
+					if(lib.way.checkObjectsTouch(sword, boss)) {
+						timeOnBoss += 1 / lib.way.fps();
+						lib.audio.playSound(100 * timeOnBoss, 100, "sine");
+						console.warn(timeOnBoss);
+						bossHealthBar.style.width = `${((100 / 15) * timeOnBoss)}%`;
+					}
+
+					if(timeOnBoss > 15) {
+					}
 				} else {
 					sword.style.opacity = 0.5;
 					if(lib.way.checkObjectsTouch(sword, boss)) {
@@ -755,33 +783,36 @@ var main = (async function () {
 			}
 			
 			if (currentDungeonRoom == specialRoom) {
-				if (lib.way.checkObjectsTouch(bookofzongorgononilil, jose) && !bookofzongorgononililTaken) {
-					assureSungIs("");
+				if(bookofzongorgononilil) {
+					if (lib.way.checkObjectsTouch(bookofzongorgononilil, jose) && !bookofzongorgononililTaken) {
+						assureSungIs("");
+	
+						bookofzongorgononilil.remove();
+	
+						lib.misc.storyGo("You must defeat the Skibidi Sigma Aura Demon before it spreads its chaotic vibes across the multiverse. Only by channeling the ultimate rizz and mastering the forbidden NPC dance can you stand a chance. Grab your drip, summon your squad, and prepare for the ultimate battle of skill and style! You must defeat the Skibidi Sigma Aura Demon before it spreads its chaotic vibes across the multiverse. Only by channeling the ultimate rizz and mastering the forbidden NPC dance can you stand a chance. Grab your drip, summon your squad, and prepare for the ultimate battle of skill and style! You must defeat the Skibidi Sigma Aura Demon before it spreads its chaotic vibes across the multiverse. Only by channeling the ultimate rizz and mastering the forbidden NPC dance can you stand a chance. Grab your drip, summon your squad, and prepare for the ultimate battle of skill and style!");
+	
+						setTimeout(function() {
+							sword = lib.misc.createImage("wall.jpg", "width:20%;height:10%;");
+							hasSword = true;
+							document.body.appendChild(sword);
+		
+							lib.audio.playMovingSound(1000, 2000, 1000, "sine");
+							bookofzongorgononililTaken = true;
+							lib.css.setBackground("underworld2.jpg");
+							lib.css.SetPosition(jose, "50%", "50%");
+		
+							boss = lib.misc.createImage("demonig.png", "max-width:15%;transform:translate(-50%,-50%);");
+							lib.css.SetPosition(boss, "50%", "10%");
+							document.body.appendChild(boss);
+		
+							document.body.appendChild(boss_shield);
+							document.body.appendChild(bossHealthBar);
 
-					bookofzongorgononilil.remove();
-
-					lib.misc.storyGo("You must defeat the Skibidi Sigma Aura Demon before it spreads its chaotic vibes across the multiverse. Only by channeling the ultimate rizz and mastering the forbidden NPC dance can you stand a chance. Grab your drip, summon your squad, and prepare for the ultimate battle of skill and style! You must defeat the Skibidi Sigma Aura Demon before it spreads its chaotic vibes across the multiverse. Only by channeling the ultimate rizz and mastering the forbidden NPC dance can you stand a chance. Grab your drip, summon your squad, and prepare for the ultimate battle of skill and style! You must defeat the Skibidi Sigma Aura Demon before it spreads its chaotic vibes across the multiverse. Only by channeling the ultimate rizz and mastering the forbidden NPC dance can you stand a chance. Grab your drip, summon your squad, and prepare for the ultimate battle of skill and style!");
-
-					setTimeout(function() {
-						sword = lib.misc.createImage("wall.jpg", "width:20%;height:10%;");
-						hasSword = true;
-						document.body.appendChild(sword);
-	
-						lib.audio.playMovingSound(1000, 2000, 1000, "sine");
-						bookofzongorgononililTaken = true;
-						lib.css.setBackground("underworld2.jpg");
-						lib.css.SetPosition(jose, "50%", "50%");
-	
-						boss = lib.misc.createImage("demonig.png", "max-width:15%;transform:translate(-50%,-50%);");
-						lib.css.SetPosition(boss, "50%", "10%");
-						document.body.appendChild(boss);
-	
-						document.body.appendChild(boss_shield);
-	
-						setInterval(function() {
-							bossAttacking = !bossAttacking;
+							setInterval(function() {
+								bossAttacking = !bossAttacking;
+							}, 5000);
 						}, 5000);
-					}, 5000);
+					}
 				}
 			} else {
 				for (var i = 0; i < theseAreWalls.length; i++) {

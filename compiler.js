@@ -3,7 +3,7 @@ const path = require('path');
 const JavaScriptObfuscator = require('javascript-obfuscator');
 
 const sourceDir = path.join(__dirname, 'Main-v1', 'libs');
-const targetDir = path.join(__dirname, 'Main-v1', 'libs-prod');
+const targetDir = path.join(__dirname, 'Main-v1-prod', 'libs-prod');
   
 if (!fs.existsSync(targetDir)) {
     fs.mkdirSync(targetDir, { recursive: true });

@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require("fs");
 const https = require('https');
 const app = express();
-const port = 4327;
+const PORT = 4327;
 
 var server = null;
 

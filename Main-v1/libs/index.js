@@ -428,7 +428,7 @@ var main = (async function () {
 		scheduler.handle();
 		lib.way.frame();
 
-		fpsCounter.innerText = `WAYFPS: ${Math.round(lib.way.fps())} fps`;
+		fpsCounter.innerText = `${Math.round(lib.way.fps())} fps`;
 
 		if (scene == "main") {
 			if (lib.way.checkObjectsTouch(jose, scrol)) {

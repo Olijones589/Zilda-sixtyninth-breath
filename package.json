@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "express": "^4.21.2",
     "javascript-obfuscator": "^4.1.1"
   }
 }
